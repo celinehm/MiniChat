@@ -1,7 +1,7 @@
 <?php
 session_start();
 require "db.php";
-
+// Vérification de l'authentification
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -45,7 +45,7 @@ if (!empty($_POST['message'])) {
     🌍 Dernière IP : <strong><?= $user['last_ip'] ?></strong><br>
     🕒 Dernière connexion : <strong><?= $user['last_login'] ?></strong>
 </p>
-
+<!-- Lien de déconnexion -->
 <a href="logout.php">Déconnexion</a>
 
 <hr>

@@ -3,7 +3,8 @@ $host = "localhost";
 $dbname = "minichat";
 $user = "root";
 $pass = "";
-
+// Connexion à la base de données avec PDO
+//pdo: PHP Data Objects
 try {
     $pdo = new PDO(
         "mysql:host=localhost;dbname=minichat;charset=utf8",
