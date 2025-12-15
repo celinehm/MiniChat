@@ -2,6 +2,32 @@
 session_start();
 require "db.php";
 
+#MODE AJAX : chargement des messages
+if (isset($_GET['ajax'])) {
+
+    $req = $pdo->query("
+        SELECT users.username, messages.message, messages.date_message
+        FROM messages
+        JOIN users ON users.id = messages.user_id
+        ORDER BY messages.id DESC
+        LIMIT 20
+    ");
+
+    while ($m = $req->fetch()) {
+        echo "
+        <div class='message'>
+            <strong>{$m['username']}</strong>
+            <span class='date'>({$m['date_message']})</span><br>
+            {$m['message']}
+        </div>";
+    }
+    exit;
+}
+
+/* =========================
+   MODE NORMAL
+========================= */
+
 // Vérification de l'authentification
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -19,9 +45,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Traitement du formulaire de message
 if (!empty($_POST['message'])) {
-    $message = htmlentities($_POST['message']); // Sécurité contre HTML/JS
+    $message = htmlentities($_POST['message']);
 
-    // Insertion dans la table messages
     $stmt = $pdo->prepare("
         INSERT INTO messages (user_id, message)
         VALUES (?, ?)
@@ -77,10 +102,6 @@ if (!empty($_POST['message'])) {
             font-size: 14px;
         }
 
-        .logout:hover {
-            background: #c53030;
-        }
-
         form {
             display: flex;
             gap: 10px;
@@ -101,10 +122,6 @@ if (!empty($_POST['message'])) {
             color: white;
             border-radius: 4px;
             cursor: pointer;
-        }
-
-        button:hover {
-            background: #5a67d8;
         }
 
         .message {
@@ -138,7 +155,7 @@ if (!empty($_POST['message'])) {
         <a href="logout.php" class="logout">Déconnexion</a>
     </div>
 
-    <!-- Formulaire d'envoi de message -->
+    <!-- Formulaire -->
     <form method="post">
         <input type="text" name="message" placeholder="Écris ton message..." required>
         <button type="submit">Envoyer</button>
@@ -146,26 +163,26 @@ if (!empty($_POST['message'])) {
 
     <h3>Derniers messages</h3>
 
-    <?php
-    // Récupérer les messages
-    $req = $pdo->query("
-        SELECT users.username, messages.message, messages.date_message
-        FROM messages
-        JOIN users ON users.id = messages.user_id
-        ORDER BY messages.id DESC
-    ");
-
-    while ($m = $req->fetch()) {
-        echo "
-        <div class='message'>
-            <strong>{$m['username']}</strong>
-            <span class='date'>({$m['date_message']})</span><br>
-            {$m['message']}
-        </div>";
-    }
-    ?>
+    <!-- Zone AJAX -->
+    <div id="messages"></div>
 
 </div>
+
+<script>
+function loadMessages() {
+    fetch("chat.php?ajax=1")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("messages").innerHTML = data;
+        });
+}
+
+// Chargement initial
+loadMessages();
+
+// Actualisation toutes les 2 secondes
+setInterval(loadMessages, 2000);
+</script>
 
 </body>
 </html>
