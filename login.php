@@ -58,22 +58,91 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 350px;
+            margin: 100px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .error {
+            color: #e53e3e;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Connexion</h2>
+<div class="container">
 
-<p style="color:red"><?= $messageErreur ?></p>
+    <h2>Connexion</h2>
 
-<form method="post">
-    Pseudo : <input type="text" name="username" required><br><br>
-    Mot de passe : <input type="password" name="password" required><br><br>
-    <button type="submit">Se connecter</button>
-</form>
+    <p class="error"><?= $messageErreur ?></p>
+
+    <form method="post">
+        <label>Pseudo</label>
+        <input type="text" name="username" required>
+
+        <label>Mot de passe</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+</div>
 
 </body>
 </html>
